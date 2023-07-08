@@ -28,7 +28,7 @@ def compute_fibonacci(n:int)->int:
 @app.get("/fib")
 def read_fibonacci(n:str):
 
-    if not n.isdigit():
+    if not n.isdigit() or int(n)==0:
         #nが自然数でなかったとき
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
