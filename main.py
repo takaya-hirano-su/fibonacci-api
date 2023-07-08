@@ -2,8 +2,10 @@ import sys
 sys.set_int_max_str_digits(10**9)
 
 from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 import numpy as np
-import json
+
 
 app=FastAPI()
 
@@ -25,9 +27,7 @@ def compute_fibonacci(n:int)->int:
 
 @app.get("/fib")
 def read_fibonacci(n:int):
-    return json.dumps({"result":compute_fibonacci(n)})
+    fib=compute_fibonacci(n)
+    content=jsonable_encoder({"result":fib})
+    return JSONResponse(content)
 
-
-# if __name__=="__main__":
-#     import uvicorn
-#     uvicorn.run("main:app --host 127.0.0.1 --port 8000")
