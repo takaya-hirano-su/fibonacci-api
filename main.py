@@ -1,7 +1,7 @@
 import sys
 sys.set_int_max_str_digits(10**9)
 
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException,status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 import numpy as np
@@ -26,8 +26,25 @@ def compute_fibonacci(n:int)->int:
     return fib
 
 @app.get("/fib")
-def read_fibonacci(n:int):
-    fib=compute_fibonacci(n)
-    content=jsonable_encoder({"result":fib})
+def read_fibonacci(n:str):
+
+    if not n.isdigit():
+        #nが自然数でなかったとき
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="'n' is not a natural number. 'n' must be a natural number that is greater than 0 and less than 2000001."
+        )
+
+    elif int(n)>2000000:
+        #nが大きすぎるとき
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="'n' is too large. 'n' must be a natural number that is greater than 0 and less than 2000001."
+        )
+    
+    else:
+        fib=compute_fibonacci(int(n))
+        content=jsonable_encoder({"result":fib})
+
     return JSONResponse(content)
 
