@@ -1,3 +1,5 @@
 .ssh
 .debug
 __pycache__
+.figs
+.pytest_cache

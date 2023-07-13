@@ -11,7 +11,9 @@ app=FastAPI()
 
 def compute_fibonacci(n:int)->int:
 
-    if 0<n and n<3:
+    if n<=0:
+        fib=None
+    elif 0<n and n<3:
         fib=1
     else:
         #フィボナッチ数列の漸化式を行列形式で解く
@@ -21,9 +23,10 @@ def compute_fibonacci(n:int)->int:
         fib_init=np.array(
             [[1],
              [1]],dtype=object)
-        fib=(np.linalg.matrix_power(fib_matrix,n-2)@fib_init)[0,0]
+        fib=(np.linalg.matrix_power(fib_matrix,n-2)@fib_init)[0,0] #繰り返し2乗法で実装されているので,O(logN)
 
     return fib
+
 
 @app.get("/fib")
 def read_fibonacci(n:str):
@@ -32,14 +35,14 @@ def read_fibonacci(n:str):
         #nが自然数でなかったとき
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="'n' is not a natural number. 'n' must be a natural number that is greater than 0 and less than 2000001."
+            detail="'n' is not a natural number. 'n' must be a natural number that is greater than 0 and less than 800001."
         )
 
-    elif int(n)>2000000:
+    elif int(n)>800000:
         #nが大きすぎるとき
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="'n' is too large. 'n' must be a natural number that is greater than 0 and less than 2000001."
+            detail="'n' is too large. 'n' must be a natural number that is greater than 0 and less than 800001."
         )
     
     else:
